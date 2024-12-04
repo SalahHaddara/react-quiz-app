@@ -41,3 +41,5 @@ export function QuizProvider({children}) {
         </QuizContext.Provider>
     );
 }
+
+export const useQuizContext = () => useContext(QuizContext);
