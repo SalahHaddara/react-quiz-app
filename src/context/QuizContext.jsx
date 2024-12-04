@@ -9,3 +9,26 @@ const initialState = {
     score: 0,
     quizComplete: false
 };
+
+function quizReducer(state, action) {
+    switch (action.type) {
+        case 'START_QUIZ':
+            return {
+                ...initialState,
+                currentQuizIndex: action.payload
+            };
+        case 'SET_ANSWER':
+            return {
+                ...state,
+                userAnswer: action.payload
+            };
+        case 'NEXT_QUESTION':
+            return {
+                ...state,
+                currentQuestionIndex: state.currentQuestionIndex + 1,
+                userAnswer: ""
+            };
+        default:
+            return state;
+    }
+}
