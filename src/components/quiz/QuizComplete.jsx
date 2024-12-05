@@ -1,6 +1,6 @@
 import React from 'react';
-import {Card, CardHeader, CardContent, CardFooter, CardTitle} from "@/components/ui/card";
-import {Button} from "@/components/ui/button";
+import {Card, CardHeader, CardContent, CardFooter, CardTitle} from "../ui/card.jsx";
+import {Button} from "../ui/button.jsx";
 import {Trophy} from 'lucide-react';
 import {useQuiz} from '../../hooks/useQuiz';
 

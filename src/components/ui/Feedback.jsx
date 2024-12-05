@@ -1,6 +1,6 @@
 import React from 'react';
 import {CheckCircle2, XCircle} from 'lucide-react';
-import {Alert} from "@/components/ui/alert";
+import {Alert} from "./alert.jsx";
 
 export default function Feedback({isCorrect, points}) {
     return (

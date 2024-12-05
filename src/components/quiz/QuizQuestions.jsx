@@ -1,8 +1,9 @@
 import React from 'react';
-import {Card, CardHeader, CardContent, CardFooter, CardTitle} from "@/components/ui/card";
-import {Button} from "@/components/ui/button";
-import {Input} from "@/components/ui/input";
+import {Card, CardHeader, CardContent, CardFooter, CardTitle} from "../ui/card";
+import {Button} from "../ui/button";
+import {Input} from "../ui/input";
 import {useQuiz} from '../../hooks/useQuiz';
+import Feedback from './../ui/Feedback.jsx';
 
 export default function QuizQuestion() {
     const {
@@ -12,7 +13,9 @@ export default function QuizQuestion() {
         submitAnswer,
         questionNumber,
         totalQuestions,
-        score
+        score,
+        showFeedback,
+        isCorrect
     } = useQuiz();
 
     if (!currentQuestion) return null;
@@ -29,6 +32,13 @@ export default function QuizQuestion() {
                 <div className="text-lg font-medium">
                     {currentQuestion.question}
                 </div>
+
+                {showFeedback && (
+                    <Feedback
+                        isCorrect={isCorrect}
+                        points={currentQuestion.points}
+                    />
+                )}
 
                 {currentQuestion.type === 'multiple-choice' ? (
                     <div className="grid gap-2">
@@ -56,7 +66,7 @@ export default function QuizQuestion() {
             <CardFooter>
                 <Button
                     onClick={submitAnswer}
-                    disabled={!userAnswer}
+                    disabled={!userAnswer || showFeedback}
                     className="w-full"
                 >
                     Submit Answer

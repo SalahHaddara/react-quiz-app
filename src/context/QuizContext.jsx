@@ -7,7 +7,9 @@ const initialState = {
     currentQuestionIndex: 0,
     userAnswer: "",
     score: 0,
-    quizComplete: false
+    quizComplete: false,
+    showFeedback: false,
+    isCorrect: false
 };
 
 function quizReducer(state, action) {
@@ -22,11 +24,25 @@ function quizReducer(state, action) {
                 ...state,
                 userAnswer: action.payload
             };
+        case 'SUBMIT_ANSWER':
+            return {
+                ...state,
+                score: state.score + action.payload.points,
+                showFeedback: true,
+                isCorrect: action.payload.isCorrect
+            };
         case 'NEXT_QUESTION':
             return {
                 ...state,
                 currentQuestionIndex: state.currentQuestionIndex + 1,
-                userAnswer: ""
+                userAnswer: "",
+                showFeedback: false
+            };
+        case 'COMPLETE_QUIZ':
+            return {
+                ...state,
+                quizComplete: true,
+                showFeedback: false
             };
         default:
             return state;
