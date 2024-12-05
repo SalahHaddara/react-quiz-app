@@ -19,11 +19,13 @@ function quizReducer(state, action) {
                 ...initialState,
                 currentQuizIndex: action.payload
             };
+
         case 'SET_ANSWER':
             return {
                 ...state,
                 userAnswer: action.payload
             };
+
         case 'SUBMIT_ANSWER':
             return {
                 ...state,
@@ -31,19 +33,27 @@ function quizReducer(state, action) {
                 showFeedback: true,
                 isCorrect: action.payload.isCorrect
             };
-        case 'NEXT_QUESTION':
+
+        case 'MOVE_TO_NEXT': {
+            const currentQuiz = action.payload.currentQuiz;
+            const nextIndex = state.currentQuestionIndex + 1;
+
+            if (nextIndex >= currentQuiz.questions.length) {
+                return {
+                    ...state,
+                    showFeedback: false,
+                    quizComplete: true
+                };
+            }
+
             return {
                 ...state,
-                currentQuestionIndex: state.currentQuestionIndex + 1,
+                currentQuestionIndex: nextIndex,
                 userAnswer: "",
                 showFeedback: false
             };
-        case 'COMPLETE_QUIZ':
-            return {
-                ...state,
-                quizComplete: true,
-                showFeedback: false
-            };
+        }
+
         default:
             return state;
     }

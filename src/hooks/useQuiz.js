@@ -1,24 +1,35 @@
-import {useEffect} from 'react';
+import {useEffect, useCallback, useRef} from 'react';
 import {useQuizContext} from '../context/QuizContext';
 import {quizData} from '../data/quizData';
 
 export function useQuiz() {
     const {state, dispatch} = useQuizContext();
+    const timeoutRef = useRef(null);
+    const isMovingRef = useRef(false);
 
+    // Effect to handle feedback timing
     useEffect(() => {
-        if (state.showFeedback) {
-            const timer = setTimeout(() => {
-                const currentQuiz = quizData[state.currentQuizIndex];
-                if (state.currentQuestionIndex < currentQuiz.questions.length - 1) {
-                    dispatch({type: 'NEXT_QUESTION'});
-                } else {
-                    dispatch({type: 'COMPLETE_QUIZ'});
-                }
-            }, 1500); // Show feedback for 1.5 seconds
+        if (state.showFeedback && !isMovingRef.current) {
+            isMovingRef.current = true;
 
-            return () => clearTimeout(timer);
+            timeoutRef.current = setTimeout(() => {
+                const currentQuiz = quizData[state.currentQuizIndex];
+                dispatch({
+                    type: 'MOVE_TO_NEXT',
+                    payload: {currentQuiz}
+                });
+                isMovingRef.current = false;
+            }, 1500);
+
+            return () => {
+                if (timeoutRef.current) {
+                    clearTimeout(timeoutRef.current);
+                    timeoutRef.current = null;
+                }
+                isMovingRef.current = false;
+            };
         }
-    }, [state.showFeedback, state.currentQuestionIndex, state.currentQuizIndex, dispatch]);
+    }, [state.showFeedback, state.currentQuizIndex, dispatch]);
 
     const checkAnswer = (userAnswer, correctAnswer, type) => {
         if (type === 'text-input') {
@@ -56,7 +67,7 @@ export function useQuiz() {
 
     return {
         currentQuiz: state.currentQuizIndex !== null ? quizData[state.currentQuizIndex] : null,
-        currentQuestion: state.currentQuizIndex !== null ?
+        currentQuestion: state.currentQuizIndex !== null && !state.quizComplete ?
             quizData[state.currentQuizIndex].questions[state.currentQuestionIndex] : null,
         userAnswer: state.userAnswer,
         score: state.score,
