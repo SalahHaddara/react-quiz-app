@@ -46,4 +46,23 @@ export function useQuiz() {
         }, [state.showFeedback]);
     };
 
+    const handleAnswer = (answer) => {
+        dispatch({type: 'SET_ANSWER', payload: answer});
+    };
+
+    return {
+        currentQuiz: state.currentQuizIndex !== null ? quizData[state.currentQuizIndex] : null,
+        currentQuestion: state.currentQuizIndex !== null ?
+            quizData[state.currentQuizIndex].questions[state.currentQuestionIndex] : null,
+        userAnswer: state.userAnswer,
+        score: state.score,
+        isComplete: state.quizComplete,
+        questionNumber: state.currentQuestionIndex + 1,
+        totalQuestions: state.currentQuizIndex !== null ?
+            quizData[state.currentQuizIndex].questions.length : 0,
+
+        startQuiz,
+        handleAnswer,
+        submitAnswer
+    };
 }
